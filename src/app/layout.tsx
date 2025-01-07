@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { Inter } from "next/font/google";
 import { ToastContainer } from "react-toastify";
+import { QueryProvider } from "./QueryClientProvider";
 
 const interFont = Inter({ subsets: ["latin"] });
 
@@ -18,7 +19,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={interFont.className}>
-        {children}
+        <QueryProvider>{children}</QueryProvider>
         <ToastContainer />
       </body>
     </html>

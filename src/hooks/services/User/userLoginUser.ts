@@ -4,7 +4,7 @@ import axiosClient from "@/lib/axiosClient";
 import { useMutation } from "@tanstack/react-query";
 import { UserLogin, UserLoginResponse } from "./type";
 
-const createUpdateBook = async (
+const loginUser = async (
   data: UserLogin
 ): Promise<UserLoginResponse> => {
   const res = await axiosClient.post("users/login", data).then((res: any) => {
@@ -14,8 +14,8 @@ const createUpdateBook = async (
   return res.data;
 };
 
-export function useCreateUpdateBook() {
+export function useLoginUser() {
   return useMutation({
-    mutationFn: (data: UserLogin) => createUpdateBook(data),
+    mutationFn: (data: UserLogin) => loginUser(data),
   });
 }
