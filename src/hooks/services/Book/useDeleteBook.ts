@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 
 const deleteBook = async (id: string) => {
   const res = await axiosClient
-      .delete(`/books?id=${id}`)
+      .delete(`/books/${id}`)
       .then((res: any) => {
         return res.data;
       });
