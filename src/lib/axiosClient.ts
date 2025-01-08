@@ -14,12 +14,13 @@ type headers = {
   Authorization: string;
 };
 
+axiosClient.defaults.withCredentials = true;
+
 axiosClient.defaults.headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
 } as headers & HeadersDefaults;
 
-axiosClient.defaults.withCredentials = true;
 
 axiosClient.interceptors.request.use(
   (config: any) => {

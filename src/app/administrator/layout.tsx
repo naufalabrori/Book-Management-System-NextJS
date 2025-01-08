@@ -44,13 +44,13 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       setIsAuth(true);
     } else {
       logout();
-      router.push("/auth/login");
+      router.push("/login");
     }
   }, [router]);
 
   const handleLogout = () => {
     logout();
-    router.push("/auth/login");
+    router.push("/login");
   };
 
   return (

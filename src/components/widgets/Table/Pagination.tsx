@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Button } from "@/components/ui/button";
 import { PaginationProps } from "./types";
 
@@ -50,15 +51,15 @@ export function DataTablePagination({
   return (
     <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-2">
       <div className="text-xs text-muted-foreground font-semibold">
-        Showing {page + 1} to {Math.min(page + limit, total)} of {total}{" "}
-        entries
+        Showing {(currentPage - 1) * limit + 1} to{" "}
+        {Math.min(currentPage * limit, total)} of {total} entries
       </div>
       <div className="flex flex-wrap items-center gap-1">
         {/* Previous Button */}
         <Button
           variant="outline"
           size="sm"
-          onClick={() => onPageChange("prev")}
+          onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
         >
           Previous
@@ -75,7 +76,7 @@ export function DataTablePagination({
                   : "bg-white hover:bg-slate-200 font-medium text-black"
               }
               size="sm"
-              onClick={() => onPageChange((page - 1) * limit)}
+              onClick={() => onPageChange(page)}
             >
               {page}
             </Button>
@@ -95,7 +96,7 @@ export function DataTablePagination({
         <Button
           variant="outline"
           size="sm"
-          onClick={() => onPageChange("next")}
+          onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
         >
           Next
