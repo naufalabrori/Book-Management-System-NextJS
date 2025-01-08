@@ -41,7 +41,7 @@ const menus = [
       },
       {
         title: "Category",
-        url: "/masterdata/Category",
+        url: "/masterdata/category",
       },
       {
         title: "Book",

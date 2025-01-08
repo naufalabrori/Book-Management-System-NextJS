@@ -1,13 +1,17 @@
 "use client"
 import { UserDataTable } from '@/components/modules/Administrator/MasterData/User/Table'
-import React from 'react'
+import useMenuStore from '@/hooks/useMenuStore';
+import React, { useEffect } from 'react'
 
-const page = () => {
+export default function Page() {
+  const { setMenu } = useMenuStore();
+
+  useEffect(() => {
+    setMenu("User");
+  }, [setMenu]);
   return (
     <div className="bg-white p-4 rounded-md shadow-lg">
       <UserDataTable/>
     </div>
   )
 }
-
-export default page

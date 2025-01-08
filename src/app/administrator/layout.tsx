@@ -33,7 +33,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const cookies = new Cookies();
   const router = useRouter();
   const pathname = usePathname();
-  const isDashboardChild = pathname.includes("/dashboard/");
+  const isDashboardChild = pathname.includes("/administrator/");
 
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const { menu } = useMenuStore();
