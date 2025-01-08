@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import axios, { HeadersDefaults } from "axios";
 import Cookies from "universal-cookie";
-import { AUTH_COOKIES_KEY, LOGIN_COOKIES_KEY } from "./constant";
+import { AUTH_COOKIES_KEY, USER_COOKIES_KEY } from "./constant";
 
 const axiosClient: any = axios.create();
 const cookies = new Cookies();
@@ -18,6 +18,8 @@ axiosClient.defaults.headers = {
   "Content-Type": "application/json",
   Accept: "application/json",
 } as headers & HeadersDefaults;
+
+axiosClient.defaults.withCredentials = true;
 
 axiosClient.interceptors.request.use(
   (config: any) => {
@@ -39,7 +41,7 @@ axiosClient.interceptors.response.use(
   },
   (error: any) => {
     if (error.response.status === 401) {
-      cookies.remove(LOGIN_COOKIES_KEY, { path: "/" });
+      cookies.remove(USER_COOKIES_KEY, { path: "/" });
       cookies.remove(AUTH_COOKIES_KEY, { path: "/" });
     }
     throw error;

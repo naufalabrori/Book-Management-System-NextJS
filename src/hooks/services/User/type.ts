@@ -13,6 +13,6 @@ export type UserLogin = {
 }
 
 export type UserLoginResponse = {
-  token?: string;
+  token: string;
   user: User
 }

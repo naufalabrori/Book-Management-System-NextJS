@@ -17,6 +17,7 @@ import { toast } from "react-toastify";
 import { Loader2 } from "lucide-react";
 import { useLoginUser } from "@/hooks/services/User/userLoginUser";
 import { z } from "zod";
+import { setLoginData } from "@/lib/auth";
 
 const userLoginScheme = z.object({
   email: z.string({ required_error: "Email is required" }),
@@ -45,7 +46,7 @@ export function LoginForm({
   };
 
   const router = useRouter();
-  
+
   const { mutate: loginUser } = useLoginUser();
 
   const handleLogin = () => {
@@ -64,14 +65,16 @@ export function LoginForm({
       setErrors(validationErrors);
     } else {
       loginUser(result.data, {
-        onSuccess: () => {
+        onSuccess: (res) => {
           toast.success("Login successful");
-          router.push("/dashboard");
+          setLoginData(res.user, res.token);
+          router.push("/administrator");
         },
         onError: (error: any) => {
-          console.log(error);
-          toast.error(error?.response?.data?.message ||
-            "Terjadi kesalahan, silakan coba beberapa saat lagi.");
+          toast.error(
+            error?.response?.data?.message ||
+              "Terjadi kesalahan, silakan coba beberapa saat lagi."
+          );
         },
       });
     }
