@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Loader2, PlusIcon, Eye, EyeOff } from "lucide-react";
+import { Loader2, PenIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -13,47 +13,36 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { z } from "zod";
 import { useQueryClient } from "@tanstack/react-query";
-import { useCreateUpdateUser } from "@/hooks/services/User/useCreateUpdateUser";
+import { useCreateUpdateUser } from "@/hooks/services/User/useCreateUpdateUser"; 
 import { toast } from "react-toastify";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { User } from "@/hooks/services/User/type";
 
-const userSchema = z.object({
+const UserSchema = z.object({
   name: z
     .string({ required_error: "Name is required" })
     .min(1, "Name is required"),
   email: z.string({ required_error: "Email is required" }).email(),
-  password: z
-    .string({ required_error: "Password is required" })
-    .min(8, "Password must be at least 8 characters long")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
-    .regex(/[0-9]/, "Password must contain at least one number")
-    .regex(
-      /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character"
-    ),
   role: z.string({ required_error: "Role is required" }),
   phone_number: z.string().optional(),
 });
 
-type UserFormValues = z.infer<typeof userSchema>;
+type UserFormValues = z.infer<typeof UserSchema>;
 
-export function CreateUserForm() {
-  const [form, setForm] = useState<Partial<UserFormValues>>({});
+export function UpdateUserForm({ data }: { data: User }) {
+  const [form, setForm] = useState<Partial<UserFormValues>>(data);
   const [errors, setErrors] = useState<
     Partial<Record<keyof UserFormValues, string>>
   >({});
-  const [isDialogOpen, setIsDialogOpen] = useState(false); // Control dialog visibility
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  useEffect(() => {
+    setForm(data);
+  }, [data]);
+
   const queryClient = useQueryClient();
 
   const onChange = (evt: ChangeEvent<HTMLInputElement>) => {
@@ -65,11 +54,10 @@ export function CreateUserForm() {
     }));
   };
 
-  const { mutate, isPending } = useCreateUpdateUser();
+  const { mutate, isPending } = useCreateUpdateUser(data?.id);
 
   const handleSubmit = () => {
-    console.log(form);
-    const result = userSchema.safeParse(form);
+    const result = UserSchema.safeParse(form);
 
     if (!result.success) {
       // Collect and display validation errors
@@ -87,7 +75,7 @@ export function CreateUserForm() {
           queryClient.invalidateQueries({
             queryKey: ["get-list-user"],
           });
-          toast("User Created Successfully", { type: "success" });
+          toast("User Updated", { type: "success" });
         },
         onError: (error: any) => {
           toast(
@@ -99,33 +87,23 @@ export function CreateUserForm() {
           );
         },
       });
-      // Clear form and errors
-      setForm({});
-      setErrors({});
       setIsDialogOpen(false); // Close dialog after success
     }
   };
-
-  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button
-          className="mb-2 bg-violet-500 hover:bg-violet-600"
-          onClick={() => {
-            setIsDialogOpen(true);
-            setForm({});
-            setErrors({});
-          }}
+          className="mb-2 bg-yellow-500 hover:bg-yellow-600 mr-1"
+          onClick={() => setIsDialogOpen(true)}
         >
-          <PlusIcon />
-          Create
+          <PenIcon />
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-xl">
         <DialogHeader className="mb-2">
-          <DialogTitle>Create User</DialogTitle>
+          <DialogTitle>Update User</DialogTitle>
         </DialogHeader>
         <div className="grid grid-cols-5 gap-2">
           <div className="col-span-2">Name</div>
@@ -176,35 +154,10 @@ export function CreateUserForm() {
           </div>
         </div>
         <div className="grid grid-cols-5 gap-2">
-          <div className="col-span-2">Password</div>
-          <div className="col-span-3">
-            <div className="relative flex items-center max-w-xs">
-              <Input
-                placeholder="Insert Password"
-                type={showPassword ? "text" : "password"}
-                name="password"
-                value={form.password || ""}
-                onChange={onChange}
-                className="flex-1"
-              />
-              <button
-                type="button"
-                className="absolute right-2 text-gray-500"
-                onClick={() => setShowPassword((prev) => !prev)}
-              >
-                {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
-              </button>
-            </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
-          </div>
-        </div>
-
-        <div className="grid grid-cols-5 gap-2">
           <div className="col-span-2">Role</div>
           <div className="col-span-3">
             <Select
+            value={data?.role}
               onValueChange={(value) => {
                 setForm((prev) => ({ ...prev, role: value }));
                 setErrors((prevErrors) => ({
@@ -230,17 +183,12 @@ export function CreateUserForm() {
         </div>
         <DialogFooter className="sm:justify-end">
           <DialogClose asChild>
-            <Button type="button" variant="destructive" disabled={isPending}>
+            <Button type="button" variant="destructive">
               Close
             </Button>
           </DialogClose>
-          <Button
-            type="submit"
-            onClick={handleSubmit}
-            className="mb-2 sm:mb-0"
-            disabled={isPending}
-          >
-            {isPending ? <Loader2 className="animate-spin" /> : "Submit"}
+          <Button type="submit" onClick={handleSubmit} disabled={isPending}>
+            { isPending ? <Loader2 className="animate-spin" /> : "Update"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -4,11 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { User } from "@/hooks/services/User/type";
 import { useMemo } from "react";
 import { formatDateTime } from "@/lib/functions";
-import { Button } from "@/components/ui/button";
-import { PenIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { DeleteUserAlert } from "./DeleteAlert";
+import { UpdateUserForm } from "./UpdateForm";
 
 interface ColumnUser {
   currentPage: number;
@@ -16,7 +13,6 @@ interface ColumnUser {
 }
 
 export const UserColumns = ({ currentPage, perPage }: ColumnUser) => {
-  const pathname = usePathname();
   const columns = useMemo<ColumnDef<any, User>[]>(
     () => [
       {
@@ -62,37 +58,33 @@ export const UserColumns = ({ currentPage, perPage }: ColumnUser) => {
         cell: (info) => {
           const {
             id,
-            // code,
-            // name,
-            // isActive,
-            // createdBy,
-            // createdByName,
-            // createdDate
+            name,
+            email,
+            role,
+            phone_number,
+            created_date,
+            modified_date,
           } = info.row.original;
 
-          //   const masterData = {
-          //     id,
-          //     code,
-          //     name,
-          //     isActive,
-          //     createdBy,
-          //     createdByName,
-          //     createdDate
-          //   };
+          const masterData = {
+            id,
+            name,
+            email,
+            role,
+            phone_number,
+            created_date,
+            modified_date,
+          };
           return (
             <>
-              <Link href={`${pathname}/${id}`}>
-                <Button className="mr-1 bg-blue-500 hover:bg-blue-600 p-3">
-                  <PenIcon />
-                </Button>
-              </Link>
+              <UpdateUserForm data={masterData} />
               <DeleteUserAlert id={id} />
             </>
           );
         },
       },
     ],
-    [currentPage, perPage, pathname]
+    [currentPage, perPage]
   );
 
   return columns;
