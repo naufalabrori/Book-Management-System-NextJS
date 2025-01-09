@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { ChangeEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useLoginUser } from "@/hooks/services/User/userLoginUser";
 import { z } from "zod";
 import { setLoginData } from "@/lib/auth";
@@ -30,7 +30,6 @@ export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
-  const [loading, setLoading] = useState(false);
   const [form, setForm] = useState<Partial<UserLoginFormValues>>({});
   const [errors, setErrors] = useState<
     Partial<Record<keyof UserLoginFormValues, string>>
@@ -47,11 +46,9 @@ export function LoginForm({
 
   const router = useRouter();
 
-  const { mutate: loginUser } = useLoginUser();
+  const { mutate: loginUser, isPending } = useLoginUser();
 
   const handleLogin = () => {
-    setLoading(true);
-
     const result = userLoginScheme.safeParse(form);
 
     if (!result.success) {
@@ -78,8 +75,9 @@ export function LoginForm({
         },
       });
     }
-    setLoading(false);
   };
+
+  const [showPassword, setShowPassword] = useState(false);
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
@@ -112,23 +110,35 @@ export function LoginForm({
                     Forgot your password?
                   </a>
                 </div>
-                <Input
-                  type="password"
-                  name="password"
-                  required
-                  onChange={onChange}
-                />
-                {errors.password && (
-                  <p className="text-red-500 text-sm">{errors.password}</p>
-                )}
+                <div className="relative flex items-center">
+                  <Input
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    required
+                    onChange={onChange}
+                  />
+                  <button
+                    type="button"
+                    className="absolute right-2 text-gray-500"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                  >
+                    {showPassword ? <Eye size={16} /> : <EyeOff size={16} />}
+                  </button>
+                </div>
+
+                <div>
+                  {errors.password && (
+                    <p className="text-red-500 text-sm">{errors.password}</p>
+                  )}
+                </div>
               </div>
               <Button
                 type="submit"
                 className="w-full bg-blue-500 hover:bg-blue-600"
                 onClick={handleLogin}
-                disabled={loading}
+                disabled={isPending}
               >
-                {loading ? <Loader2 className="animate-spin" /> : "Login"}
+                {isPending ? <Loader2 className="animate-spin" /> : "Login"}
               </Button>
             </div>
             <div className="mt-4 text-center text-sm">
