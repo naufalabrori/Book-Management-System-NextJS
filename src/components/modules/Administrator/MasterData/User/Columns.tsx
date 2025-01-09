@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { PenIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { DeleteUserAlert } from "./DeleteAlert";
 
 interface ColumnUser {
   currentPage: number;
@@ -85,6 +86,7 @@ export const UserColumns = ({ currentPage, perPage }: ColumnUser) => {
                   <PenIcon />
                 </Button>
               </Link>
+              <DeleteUserAlert id={id} />
             </>
           );
         },
