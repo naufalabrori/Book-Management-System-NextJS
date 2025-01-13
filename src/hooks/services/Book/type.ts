@@ -4,9 +4,9 @@ export type Book = BaseType & {
   title?: string;
   author?: string;
   publisher?: string;
-  publishedYear?: string;
+  published_year?: string;
   isbn?: string;
-  categoryId?: string;
+  category_id?: number;
   quantity?: number;
-  availableQuantity?: number;
+  available_quantity?: number;
 };

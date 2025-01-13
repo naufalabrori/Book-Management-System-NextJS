@@ -4,7 +4,7 @@ import axiosClient from "@/lib/axiosClient";
 import { useMutation } from "@tanstack/react-query";
 import { Book } from "./type";
 
-const createUpdateBook = async (data: Book, id: string) => {
+const createUpdateBook = async (data: Book, id?: number) => {
   if (id) {
     const res = await axiosClient
       .put(`/books/${id}`, data)
@@ -24,7 +24,7 @@ const createUpdateBook = async (data: Book, id: string) => {
   }
 };
 
-export function useCreateUpdateBook(id: string) {
+export function useCreateUpdateBook(id?: number) {
   return useMutation({
     mutationFn: (data: any) => createUpdateBook(data, id),
   });

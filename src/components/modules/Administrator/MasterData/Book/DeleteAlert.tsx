@@ -12,25 +12,25 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteCategory } from "@/hooks/services/Category/useDeleteCategory";
+import { useDeleteBook } from "@/hooks/services/Book/useDeleteBook";
 import { useQueryClient } from "@tanstack/react-query";
 import { Trash2Icon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
-export function DeleteCategoryAlert({ id }: { id: string }) {
+export function DeleteBookAlert({ id }: { id: string }) {
   const [isDialogOpen, setIsDialogOpen] = useState(false); // Control dialog visibility
   const queryClient = useQueryClient();
 
-  const { mutate, isPending } = useDeleteCategory();
+  const { mutate, isPending } = useDeleteBook();
 
   const handleSubmit = () => {
     mutate(id, {
       onSuccess: () => {
         queryClient.invalidateQueries({
-          queryKey: ["get-list-category"],
+          queryKey: ["get-list-book"],
         });
-        toast("Category Deleted", { type: "success" });
+        toast("Book Deleted", { type: "success" });
       },
       onError: (error: any) => {
         toast(

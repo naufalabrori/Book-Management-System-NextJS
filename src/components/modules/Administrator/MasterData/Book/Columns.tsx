@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { Book } from "@/hooks/services/Book/type"; 
+import { Book } from "@/hooks/services/Book/type";
 import { useMemo } from "react";
 import { formatDateTime } from "@/lib/functions";
-import { Button } from "@/components/ui/button";
-import { PenIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { UpdateBookForm } from "./UpdateForm";
+import { DeleteBookAlert } from "./DeleteAlert";
 
 interface ColumnBook {
   currentPage: number;
@@ -15,7 +13,6 @@ interface ColumnBook {
 }
 
 export const BookColumns = ({ currentPage, perPage }: ColumnBook) => {
-  const pathname = usePathname();
   const columns = useMemo<ColumnDef<any, Book>[]>(
     () => [
       {
@@ -73,36 +70,41 @@ export const BookColumns = ({ currentPage, perPage }: ColumnBook) => {
         cell: (info) => {
           const {
             id,
-            // code,
-            // name,
-            // isActive,
-            // createdBy,
-            // createdByName,
-            // createdDate
+            title,
+            author,
+            publisher,
+            published_year,
+            isbn,
+            category_id,
+            quantity,
+            available_quantity,
+            created_date,
+            modified_date,
           } = info.row.original;
 
-          //   const masterData = {
-          //     id,
-          //     code,
-          //     name,
-          //     isActive,
-          //     createdBy,
-          //     createdByName,
-          //     createdDate
-          //   };
+          const masterData = {
+            id,
+            title,
+            author,
+            publisher,
+            published_year,
+            isbn,
+            category_id,
+            quantity,
+            available_quantity,
+            created_date,
+            modified_date,
+          };
           return (
             <>
-              <Link href={`${pathname}/${id}`}>
-                <Button className="mr-1 bg-blue-500 hover:bg-blue-600 p-3">
-                  <PenIcon />
-                </Button>
-              </Link>
+              <UpdateBookForm data={masterData} />
+              <DeleteBookAlert id={id} />
             </>
           );
         },
       },
     ],
-    [currentPage, perPage, pathname]
+    [currentPage, perPage]
   );
 
   return columns;
