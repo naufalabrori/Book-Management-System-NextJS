@@ -4,7 +4,7 @@ import axiosClient from "@/lib/axiosClient";
 import { useMutation } from "@tanstack/react-query";
 import { Category } from "./type";
 
-const createUpdateCategory = async (data: Category, id?: string) => {
+const createUpdateCategory = async (data: Category, id?: number) => {
   if (id) {
     const res = await axiosClient
       .put(`/categories/${id}`, data)
@@ -22,7 +22,7 @@ const createUpdateCategory = async (data: Category, id?: string) => {
   }
 };
 
-export function useCreateUpdateCategory(id?: string) {
+export function useCreateUpdateCategory(id?: number) {
   return useMutation({
     mutationFn: (data: any) => createUpdateCategory(data, id),
   });

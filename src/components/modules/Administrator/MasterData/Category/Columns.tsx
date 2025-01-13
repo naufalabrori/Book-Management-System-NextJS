@@ -4,10 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Category } from "@/hooks/services/Category/type"; 
 import { useMemo } from "react";
 import { formatDateTime } from "@/lib/functions";
-import { Button } from "@/components/ui/button";
-import { PenIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { UpdateCategoryForm } from "./UpdateForm";
+import { DeleteCategoryAlert } from "./DeleteAlert";
 
 interface ColumnCategory {
   currentPage: number;
@@ -15,7 +13,6 @@ interface ColumnCategory {
 }
 
 export const CategoryColumns = ({ currentPage, perPage }: ColumnCategory) => {
-  const pathname = usePathname();
   const columns = useMemo<ColumnDef<any, Category>[]>(
     () => [
       {
@@ -49,36 +46,23 @@ export const CategoryColumns = ({ currentPage, perPage }: ColumnCategory) => {
         cell: (info) => {
           const {
             id,
-            // code,
-            // name,
-            // isActive,
-            // createdBy,
-            // createdByName,
-            // createdDate
+            category_name,
           } = info.row.original;
 
-          //   const masterData = {
-          //     id,
-          //     code,
-          //     name,
-          //     isActive,
-          //     createdBy,
-          //     createdByName,
-          //     createdDate
-          //   };
+            const masterData = {
+              id,
+              category_name
+            };
           return (
             <>
-              <Link href={`${pathname}/${id}`}>
-                <Button className="mr-1 bg-blue-500 hover:bg-blue-600 p-3">
-                  <PenIcon />
-                </Button>
-              </Link>
+              <UpdateCategoryForm data={masterData} />
+              <DeleteCategoryAlert id={id} />
             </>
           );
         },
       },
     ],
-    [currentPage, perPage, pathname]
+    [currentPage, perPage]
   );
 
   return columns;

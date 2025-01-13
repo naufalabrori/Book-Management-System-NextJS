@@ -1,5 +1,5 @@
 import { BaseType } from "../baseType";
 
 export type Category = BaseType & {
-  categoryName?: string;
+  category_name?: string;
 }

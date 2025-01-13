@@ -1,4 +1,5 @@
 "use client";
+import { CreateCategoryForm } from "@/components/modules/Administrator/MasterData/Category/CreateForm";
 import { CategoryDataTable } from "@/components/modules/Administrator/MasterData/Category/Table";
 import useMenuStore from "@/hooks/useMenuStore";
 import React, { useEffect } from "react";
@@ -12,6 +13,7 @@ export default function Page() {
 
   return (
     <div className="bg-white p-4 rounded-md shadow-lg">
+      <CreateCategoryForm />
       <CategoryDataTable />
     </div>
   );
