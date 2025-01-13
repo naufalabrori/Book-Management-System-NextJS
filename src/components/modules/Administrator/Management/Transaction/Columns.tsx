@@ -1,22 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { ColumnDef } from "@tanstack/react-table";
-import { TransactionExt } from "@/hooks/services/Transaction/type"; 
+import { TransactionExt } from "@/hooks/services/Transaction/type";
 import { useMemo } from "react";
 import { formatDate, formatDateTime } from "@/lib/functions";
-import { Button } from "@/components/ui/button";
-import { PenIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
+import { DeleteTransactionAlert } from "./DeleteAlert";
+import { UpdateTransactionForm } from "./UpdateForm";
 
 interface ColumnTransaction {
   currentPage: number;
   perPage: number;
 }
 
-export const TransactionColumns = ({ currentPage, perPage }: ColumnTransaction) => {
-  const pathname = usePathname();
+export const TransactionColumns = ({
+  currentPage,
+  perPage,
+}: ColumnTransaction) => {
   const columns = useMemo<ColumnDef<any, TransactionExt>[]>(
     () => [
       {
@@ -55,7 +55,7 @@ export const TransactionColumns = ({ currentPage, perPage }: ColumnTransaction) 
       {
         accessorKey: "returned_date",
         header: () => "Returned Date",
-        cell: ({ row }) => formatDate(row.getValue("returned_date")),
+        cell: ({ row }) => row.getValue("returned_date") != "0001-01-01T07:00:00+07:00" ? formatDate(row.getValue("returned_date")) : "-",
       },
       {
         accessorKey: "status",
@@ -75,7 +75,7 @@ export const TransactionColumns = ({ currentPage, perPage }: ColumnTransaction) 
               {status}
             </Badge>
           );
-        }
+        },
       },
       {
         accessorKey: "created_date",
@@ -93,36 +93,33 @@ export const TransactionColumns = ({ currentPage, perPage }: ColumnTransaction) 
         cell: (info) => {
           const {
             id,
-            // code,
-            // name,
-            // isActive,
-            // createdBy,
-            // createdByName,
-            // createdDate
+            user_id,
+            book_id,
+            borrowed_date,
+            due_date,
+            returned_date,
+            status,
           } = info.row.original;
 
-          //   const masterData = {
-          //     id,
-          //     code,
-          //     name,
-          //     isActive,
-          //     createdBy,
-          //     createdByName,
-          //     createdDate
-          //   };
+          const masterData = {
+            id,
+            user_id,
+            book_id,
+            borrowed_date,
+            due_date,
+            returned_date,
+            status,
+          };
           return (
             <>
-              <Link href={`${pathname}/${id}`}>
-                <Button className="mr-1 bg-blue-500 hover:bg-blue-600 p-3">
-                  <PenIcon />
-                </Button>
-              </Link>
+              <UpdateTransactionForm data={masterData} />
+              <DeleteTransactionAlert id={id} />
             </>
           );
         },
       },
     ],
-    [currentPage, perPage, pathname]
+    [currentPage, perPage]
   );
 
   return columns;
