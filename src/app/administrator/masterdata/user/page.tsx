@@ -12,7 +12,7 @@ export default function Page() {
   }, [setMenu]);
   return (
     <div className="bg-white p-4 rounded-md shadow-lg">
-      <CreateUserForm data={null} />
+      <CreateUserForm />
       <UserDataTable />
     </div>
   );
