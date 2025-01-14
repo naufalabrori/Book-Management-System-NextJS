@@ -7,6 +7,8 @@ import { formatDate, formatDateTime } from "@/lib/functions";
 import { Badge } from "@/components/ui/badge";
 import { DeleteTransactionAlert } from "./DeleteAlert";
 import { UpdateTransactionForm } from "./UpdateForm";
+import { CreateFinesForm } from "../Fines/CreateForm";
+import { ReturnTransactionForm } from "./ReturnForm";
 
 interface ColumnTransaction {
   currentPage: number;
@@ -55,7 +57,10 @@ export const TransactionColumns = ({
       {
         accessorKey: "returned_date",
         header: () => "Returned Date",
-        cell: ({ row }) => row.getValue("returned_date") != "0001-01-01T07:00:00+07:00" ? formatDate(row.getValue("returned_date")) : "-",
+        cell: ({ row }) =>
+          row.getValue("returned_date") != "0001-01-01T07:00:00+07:00"
+            ? formatDate(row.getValue("returned_date"))
+            : "-",
       },
       {
         accessorKey: "status",
@@ -99,6 +104,7 @@ export const TransactionColumns = ({
             due_date,
             returned_date,
             status,
+            fines_paid_date,
           } = info.row.original;
 
           const masterData = {
@@ -109,11 +115,16 @@ export const TransactionColumns = ({
             due_date,
             returned_date,
             status,
+            fines_paid_date,
           };
           return (
             <>
               <UpdateTransactionForm data={masterData} />
               <DeleteTransactionAlert id={id} />
+              {status === "Borrowed" ? <ReturnTransactionForm id={id} /> : null}
+              {status === "Overdue" && fines_paid_date == "" ? (
+                <CreateFinesForm isFinesPage={false} transaction_id={id} />
+              ) : null}
             </>
           );
         },

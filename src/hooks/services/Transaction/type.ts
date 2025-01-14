@@ -14,4 +14,5 @@ export type TransactionExt = Transaction & {
   user_email?: string;
   user_name?: string;
   book_title?: string;
+  fines_paid_date?: string;
 }

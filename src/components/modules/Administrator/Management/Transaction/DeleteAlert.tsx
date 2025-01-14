@@ -49,7 +49,7 @@ export function DeleteTransactionAlert({ id }: { id: string }) {
   return (
     <AlertDialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">
+        <Button variant="destructive" className="mb-2 mr-1">
           <Trash2Icon />
         </Button>
       </AlertDialogTrigger>

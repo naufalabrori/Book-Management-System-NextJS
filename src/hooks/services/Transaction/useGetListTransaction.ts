@@ -2,14 +2,14 @@
 import axiosClient from "@/lib/axiosClient";
 import { useQuery } from "@tanstack/react-query";
 import { PaginationParams } from "@/lib/types";
-import { Transaction } from "./type";
+import { TransactionExt } from "./type";
 
-export type TransactionResponse = Transaction & {
-  data: Transaction[];
+export type TransactionResponse = TransactionExt & {
+  data: TransactionExt[];
   totalData: number;
 };
 
-export type TransactionParams = Transaction & PaginationParams;
+export type TransactionParams = TransactionExt & PaginationParams;
 
 async function getTransaction<T>(params: TransactionParams): Promise<T> {
   const res = await axiosClient
