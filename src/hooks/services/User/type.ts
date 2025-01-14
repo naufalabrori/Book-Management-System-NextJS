@@ -5,6 +5,7 @@ export type User = BaseType & {
   email?: string;
   role?: string;
   phoneNumber?: string;
+  image?: string;
 }
 
 export type UserLogin = {

@@ -28,6 +28,7 @@ import {
 } from "@/components/ui/popover";
 import { logout } from "@/lib/auth";
 import { LogOut } from "lucide-react";
+import { getLoginData } from "@/lib/auth";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const cookies = new Cookies();
@@ -37,6 +38,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
 
   const [isAuth, setIsAuth] = useState<boolean>(false);
   const { menu } = useMenuStore();
+
+  const user = getLoginData();
+  const imagePath = process.env.NEXT_PUBLIC_API_URL + '/uploads/images/' + user?.image;
 
   useEffect(() => {
     const token = cookies.get(AUTH_COOKIES_KEY);
@@ -101,10 +105,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                 <Popover>
                   <PopoverTrigger>
                     <Image
-                      src="/boy.png"
+                      src={user?.image != "" ? imagePath : "/boy.png"}
                       width={50}
                       height={50}
-                      alt="User Avatar"
+                      alt=""
                       className="w-11 h-11 rounded-full border-2 border-gray-300 shadow-sm cursor-pointer"
                     />
                   </PopoverTrigger>

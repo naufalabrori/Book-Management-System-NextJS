@@ -157,7 +157,7 @@ export function UpdateUserForm({ data }: { data: User }) {
           <div className="col-span-2">Role</div>
           <div className="col-span-3">
             <Select
-            value={data?.role}
+              defaultValue={data?.role}
               onValueChange={(value) => {
                 setForm((prev) => ({ ...prev, role: value }));
                 setErrors((prevErrors) => ({
