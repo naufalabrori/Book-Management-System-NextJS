@@ -28,7 +28,7 @@ export function useListFines<T extends FinesResponse>(
   params: FinesParams
 ) {
   return useQuery<T>({
-    queryKey: ["get-list-Fines", JSON.stringify(params)],
+    queryKey: ["get-list-fines", JSON.stringify(params)],
     queryFn: () => getFines(params),
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,

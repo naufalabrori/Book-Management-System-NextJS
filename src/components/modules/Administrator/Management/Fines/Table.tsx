@@ -71,7 +71,7 @@ function useTableData<TData>(
 export function FinesDataTable() {
   const [totalData, setTotalData] = useState(0);
   const [limit, setLimit] = useState<string>("5");
-  const [sorting, setSorting] = useState<SortingState>([{ id: "created_date", desc: false}]);
+  const [sorting, setSorting] = useState<SortingState>([{ id: "created_date", desc: true}]);
   const [filter, setFilter] = useState<string>("");
   const [debounceFilter] = useDebounce(filter, 1000);
 

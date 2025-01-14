@@ -3,12 +3,10 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Fines } from "@/hooks/services/Fines/type";
 import { useMemo } from "react";
-import { formatDateTime } from "@/lib/functions";
-import { Button } from "@/components/ui/button";
-import { PenIcon } from "lucide-react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { formatDate, formatDateTime } from "@/lib/functions";
 import { Badge } from "@/components/ui/badge";
+import { DeleteFinesAlert } from "./DeleteAlert";
+import { UpdateFinesForm } from "./UpdateForm";
 
 interface ColumnFines {
   currentPage: number;
@@ -16,7 +14,6 @@ interface ColumnFines {
 }
 
 export const FinesColumns = ({ currentPage, perPage }: ColumnFines) => {
-  const pathname = usePathname();
   const columns = useMemo<ColumnDef<any, Fines>[]>(
     () => [
       {
@@ -31,12 +28,35 @@ export const FinesColumns = ({ currentPage, perPage }: ColumnFines) => {
         },
       },
       {
-        accessorKey: "transaction_id",
-        header: () => "Transaction ID",
+        accessorKey: "user_name",
+        header: () => "Borrowed By",
+      },
+      {
+        accessorKey: "user_email",
+        header: () => "Borrower Email",
+      },
+      {
+        accessorKey: "book_title",
+        header: () => "Book Title",
+      },
+      {
+        accessorKey: "borrowed_date",
+        header: () => "Borrowed Date",
+        cell: ({ row }) => formatDate(row.getValue("borrowed_date")),
+      }, 
+      {
+        accessorKey: "due_date",
+        header: () => "Due Date",
+        cell: ({ row }) => formatDate(row.getValue("due_date")),
+      },
+      {
+        accessorKey: "returned_date",
+        header: () => "Returned Date",
+        cell: ({ row }) => formatDate(row.getValue("returned_date")),
       },
       {
         accessorKey: "amount",
-        header: () => "Amount",
+        header: () => "Fines Amount",
       },
       {
         accessorKey: "paid_date",
@@ -44,7 +64,7 @@ export const FinesColumns = ({ currentPage, perPage }: ColumnFines) => {
         cell: ({ row }) =>
           row.getValue("paid_date") == "0001-01-01T07:00:00+07:00"
             ? "-"
-            : formatDateTime(row.getValue("paid_date")),
+            : formatDate(row.getValue("paid_date")),
       },
       {
         accessorKey: "Status",
@@ -83,36 +103,31 @@ export const FinesColumns = ({ currentPage, perPage }: ColumnFines) => {
         cell: (info) => {
           const {
             id,
-            // code,
-            // name,
-            // isActive,
-            // createdBy,
-            // createdByName,
-            // createdDate
+            transaction_id,
+            amount,
+            paid_date,
+            created_date,
+            modified_date,
           } = info.row.original;
 
-          //   const masterData = {
-          //     id,
-          //     code,
-          //     name,
-          //     isActive,
-          //     createdBy,
-          //     createdByName,
-          //     createdDate
-          //   };
+          const masterData = {
+            id,
+            transaction_id,
+            amount,
+            paid_date,
+            created_date,
+            modified_date,
+          };
           return (
             <>
-              <Link href={`${pathname}/${id}`}>
-                <Button className="mr-1 bg-blue-500 hover:bg-blue-600 p-3">
-                  <PenIcon />
-                </Button>
-              </Link>
+              <UpdateFinesForm data={masterData} />
+              <DeleteFinesAlert id={id} />
             </>
           );
         },
       },
     ],
-    [currentPage, perPage, pathname]
+    [currentPage, perPage]
   );
 
   return columns;
