@@ -3,7 +3,7 @@
 import axiosClient from "@/lib/axiosClient";
 import { useMutation } from "@tanstack/react-query";
 
-const createUpdateBook = async (id: string) => {
+const returnTransaction = async (id: string) => {
     const res = await axiosClient
     .post(`/transactions/return/${id}`)
     .then((res: any) => {
@@ -13,8 +13,8 @@ const createUpdateBook = async (id: string) => {
   return res.data;
 };
 
-export function useCreateUpdateBook(id: string) {
+export function useReturnTransaction() {
   return useMutation({
-    mutationFn: () => createUpdateBook(id),
+    mutationFn: (id: string) => returnTransaction(id),
   });
 }
