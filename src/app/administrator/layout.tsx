@@ -27,8 +27,9 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { logout } from "@/lib/auth";
-import { LogOut } from "lucide-react";
 import { getLoginData } from "@/lib/auth";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRightFromBracket, faUser } from "@fortawesome/free-solid-svg-icons";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const cookies = new Cookies();
@@ -40,7 +41,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const { menu } = useMenuStore();
 
   const user = getLoginData();
-  const imagePath = process.env.NEXT_PUBLIC_API_URL + '/uploads/images/' + user?.image;
+  const imagePath =
+    process.env.NEXT_PUBLIC_API_URL + "/uploads/images/" + user?.image;
 
   useEffect(() => {
     const token = cookies.get(AUTH_COOKIES_KEY);
@@ -75,7 +77,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                   <BreadcrumbList>
                     <BreadcrumbItem className="hidden md:block">
                       {isDashboardChild ? (
-                        <Link href="/dashboard">
+                        <Link href="/administrator">
                           <BreadcrumbLink className="font-bold">
                             Dashboard
                           </BreadcrumbLink>
@@ -112,13 +114,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
                       className="w-11 h-11 rounded-full border-2 border-gray-300 shadow-sm cursor-pointer"
                     />
                   </PopoverTrigger>
-                  <PopoverContent>
+                  <PopoverContent className="py-4 px-0">
+                    <Link href={`/administrator/profile/${user?.id}`}>
+                      <button className="flex items-center gap-2 w-full text-sm mb-2 px-4 py-1 hover:bg-gray-50">
+                        <FontAwesomeIcon icon={faUser} size="lg" />
+                        <span>Profile</span>
+                      </button>
+                    </Link>
                     <button
                       onClick={handleLogout}
-                      className="flex items-center gap-2 w-full text-red-500 hover:text-red-600 text-sm"
+                      className="flex items-center gap-2 w-full text-red-500 hover:text-red-600 text-sm px-4 py-1 hover:bg-gray-50"
                     >
-                      <LogOut size={20} />
-                      <span>Logout</span>
+                      <FontAwesomeIcon icon={faRightFromBracket} size="lg" />
+                      <span className="font-semibold">Logout</span>
                     </button>
                   </PopoverContent>
                 </Popover>

@@ -15,7 +15,7 @@ const Page = () => {
     return <div>Loading...</div>; // Placeholder
   }
 
-  return <div>Welcome {userData.email}</div>;
+  return <div>Welcome {userData.name}</div>;
 };
 
 export default Page;

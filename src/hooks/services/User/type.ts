@@ -4,7 +4,7 @@ export type User = BaseType & {
   name?: string;
   email?: string;
   role?: string;
-  phoneNumber?: string;
+  phone_number?: string;
   image?: string;
 }
 
@@ -16,4 +16,9 @@ export type UserLogin = {
 export type UserLoginResponse = {
   token: string;
   user: User
+}
+
+export type ChangePassword = {
+  old_password: string;
+  new_password: string;
 }
