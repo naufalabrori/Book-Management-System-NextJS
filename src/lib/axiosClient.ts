@@ -14,7 +14,7 @@ type headers = {
   Authorization: string;
 };
 
-axiosClient.defaults.withCredentials = true;
+axiosClient.defaults.withCredentials = false;
 
 axiosClient.defaults.headers = {
   "Content-Type": "application/json",
